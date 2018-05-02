@@ -1,0 +1,1156 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "# API Service to interact with payment gateways, payment methods, payment transactions\n\n### Who is this service for?\nThis service is intended for developers working on  API based payments.\n\n### What does this service provide?\nThe service provides access to the following data domains:\n  - Payment gateways\n  - Operator's payment method object\n  - Operator's payment transaction object\n\n\n### What does this service depend on?\nThe service depends on the following services:\n  - The user service - to ensure user exists\n  \n",
+    "version" : "1.0.0",
+    "title" : "Payment service"
+  },
+  "basePath" : "/v1",
+  "tags" : [ {
+    "name" : "PaymentGateway"
+  }, {
+    "name" : "PaymentTransaction"
+  }, {
+    "name" : "PaymentMethod"
+  } ],
+  "schemes" : [ "https" ],
+  "produces" : [ "application/json" ],
+  "paths" : {
+    "/payment/gateway" : {
+      "get" : {
+        "tags" : [ "PaymentGateway" ],
+        "summary" : "Get payment gateways",
+        "parameters" : [ {
+          "name" : "Request-Token",
+          "in" : "header",
+          "description" : "Identifier for request. Clients can send requests multiple times with the same request token to deal with network issues.",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "Requester",
+          "in" : "header",
+          "description" : "Requester type. If value is data, changes will not be sent to the data layer notification system",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "consumer", "admin", "worker", "service", "data" ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Payment gateways",
+            "schema" : {
+              "$ref" : "#/definitions/PaymentGatewayFindManyResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid or missing parameters",
+            "schema" : {
+              "$ref" : "#/definitions/BadRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Server error, please contact the administrator",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    },
+    "/payment/transaction/{paymentTransactionId}" : {
+      "get" : {
+        "tags" : [ "PaymentTransaction" ],
+        "summary" : "Get a payment transaction",
+        "parameters" : [ {
+          "name" : "Request-Token",
+          "in" : "header",
+          "description" : "Identifier for request. Clients can send requests multiple times with the same request token to deal with network issues.",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "Requester",
+          "in" : "header",
+          "description" : "Requester type. If value is data, changes will not be sent to the data layer notification system",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "consumer", "admin", "worker", "service", "data" ]
+        }, {
+          "name" : "paymentTransactionId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Payment transaction successfully created",
+            "schema" : {
+              "$ref" : "#/definitions/PaymentTransactionGetResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid or missing parameters",
+            "schema" : {
+              "$ref" : "#/definitions/BadRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Server error, please contact the administrator",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    },
+    "/payment/transaction/{paymentTransactionId}/refund" : {
+      "post" : {
+        "tags" : [ "PaymentTransaction" ],
+        "summary" : "Refund a payment transaction",
+        "parameters" : [ {
+          "name" : "Request-Token",
+          "in" : "header",
+          "description" : "Identifier for request. Clients can send requests multiple times with the same request token to deal with network issues.",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "Requester",
+          "in" : "header",
+          "description" : "Requester type. If value is data, changes will not be sent to the data layer notification system",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "consumer", "admin", "worker", "service", "data" ]
+        }, {
+          "name" : "paymentTransactionId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Payment transaction successfully refunded",
+            "schema" : {
+              "$ref" : "#/definitions/PaymentTransactionRefundResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid or missing parameters",
+            "schema" : {
+              "$ref" : "#/definitions/BadRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Server error, please contact the administrator",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    },
+    "/payment/transaction" : {
+      "get" : {
+        "tags" : [ "PaymentTransaction" ],
+        "summary" : "Get payment transactions",
+        "parameters" : [ {
+          "name" : "Request-Token",
+          "in" : "header",
+          "description" : "Identifier for request. Clients can send requests multiple times with the same request token to deal with network issues.",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "Requester",
+          "in" : "header",
+          "description" : "Requester type. If value is data, changes will not be sent to the data layer notification system",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "consumer", "admin", "worker", "service", "data" ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Payment transactions returned",
+            "schema" : {
+              "$ref" : "#/definitions/PaymentTransactionFindManyResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid or missing parameters",
+            "schema" : {
+              "$ref" : "#/definitions/BadRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Server error, please contact the administrator",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "PaymentTransaction" ],
+        "summary" : "Create a payment transaction (Purchase products)",
+        "parameters" : [ {
+          "name" : "Request-Token",
+          "in" : "header",
+          "description" : "Identifier for request. Clients can send requests multiple times with the same request token to deal with network issues.",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "Requester",
+          "in" : "header",
+          "description" : "Requester type. If value is data, changes will not be sent to the data layer notification system",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "consumer", "admin", "worker", "service", "data" ]
+        }, {
+          "in" : "body",
+          "name" : "CreatePaymentMethodParams",
+          "description" : "Paramters to update a payment method",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/PaymentTransactionCreateRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Payment transaction successfully created",
+            "schema" : {
+              "$ref" : "#/definitions/PaymentTransactionCreateResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid or missing parameters",
+            "schema" : {
+              "$ref" : "#/definitions/BadRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Server error, please contact the administrator",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    },
+    "/payment/method/{paymentMethodId}/reauthorize" : {
+      "post" : {
+        "tags" : [ "PaymentMethod" ],
+        "summary" : "Re-authorize a payment method",
+        "parameters" : [ {
+          "name" : "Request-Token",
+          "in" : "header",
+          "description" : "Identifier for request. Clients can send requests multiple times with the same request token to deal with network issues.",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "Requester",
+          "in" : "header",
+          "description" : "Requester type. If value is data, changes will not be sent to the data layer notification system",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "consumer", "admin", "worker", "service", "data" ]
+        }, {
+          "name" : "paymentMethodId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "in" : "body",
+          "name" : "ReauthPaymentMethodParams",
+          "description" : "Paramters to reauthorize a payment method",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/PaymentMethodReAuthRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Payment method re-authorized",
+            "schema" : {
+              "$ref" : "#/definitions/PaymentMethodReAuthResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid or missing parameters",
+            "schema" : {
+              "$ref" : "#/definitions/BadRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Server error, please contact the administrator",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    },
+    "/payment/method/{paymentMethodId}" : {
+      "get" : {
+        "tags" : [ "PaymentMethod" ],
+        "summary" : "Get user's details by id",
+        "parameters" : [ {
+          "name" : "paymentMethodId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "Request-Token",
+          "in" : "header",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Payment method",
+            "schema" : {
+              "$ref" : "#/definitions/PaymentMethodFindOneResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid or missing parameters",
+            "schema" : {
+              "$ref" : "#/definitions/BadRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Server error, please contact the administrator",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "PaymentMethod" ],
+        "summary" : "Update a payment method",
+        "parameters" : [ {
+          "name" : "Request-Token",
+          "in" : "header",
+          "description" : "Identifier for request. Clients can send requests multiple times with the same request token to deal with network issues.",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "Requester",
+          "in" : "header",
+          "description" : "Requester type. If value is data, changes will not be sent to the data layer notification system",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "consumer", "admin", "worker", "service", "data" ]
+        }, {
+          "name" : "paymentMethodId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "in" : "body",
+          "name" : "UpdatePaymentMethodParams",
+          "description" : "Paramters to update a payment method",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/PaymentMethodUpdateRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Payment method updated",
+            "schema" : {
+              "$ref" : "#/definitions/PaymentMethodUpdateResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid or missing parameters",
+            "schema" : {
+              "$ref" : "#/definitions/BadRequestError"
+            }
+          },
+          "409" : {
+            "description" : "Could not create or update resource due to conflict",
+            "schema" : {
+              "$ref" : "#/definitions/ConflictRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Server error, please contact the administrator",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "PaymentMethod" ],
+        "summary" : "Delete a payment method, details are anonymised",
+        "parameters" : [ {
+          "name" : "Request-Token",
+          "in" : "header",
+          "description" : "Identifier for request. Clients can send requests multiple times with the same request token to deal with network issues.",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "Requester",
+          "in" : "header",
+          "description" : "Requester type. If value is data, changes will not be sent to the data layer notification system",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "consumer", "admin", "worker", "service", "data" ]
+        }, {
+          "name" : "paymentMethodId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Payment method removed",
+            "schema" : {
+              "$ref" : "#/definitions/PaymentMethodRemovedResponse"
+            }
+          },
+          "500" : {
+            "description" : "Unexpected error",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    },
+    "/payment/method" : {
+      "get" : {
+        "tags" : [ "PaymentMethod" ],
+        "summary" : "Get payment methods",
+        "parameters" : [ {
+          "name" : "Request-Token",
+          "in" : "header",
+          "description" : "Identifier for request. Clients can send requests multiple times with the same request token to deal with network issues.",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "Requester",
+          "in" : "header",
+          "description" : "Requester type. If value is data, changes will not be sent to the data layer notification system",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "consumer", "admin", "worker", "service", "data" ]
+        }, {
+          "name" : "userID",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "format" : "uuid"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Payment methods",
+            "schema" : {
+              "$ref" : "#/definitions/PaymentMethodFindManyResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid or missing parameters",
+            "schema" : {
+              "$ref" : "#/definitions/BadRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Server error, please contact the administrator",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "PaymentMethod" ],
+        "summary" : "Create a payment method",
+        "parameters" : [ {
+          "name" : "Request-Token",
+          "in" : "header",
+          "description" : "Identifier for request. Clients can send requests multiple times with the same request token to deal with network issues.",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "Requester",
+          "in" : "header",
+          "description" : "Requester type. If value is data, changes will not be sent to the data layer notification system",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "consumer", "admin", "worker", "service", "data" ]
+        }, {
+          "in" : "body",
+          "name" : "CreatePaymentMethodParams",
+          "description" : "Paramters to create a payment method",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/PaymentMethodCreateRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Payment method created",
+            "schema" : {
+              "$ref" : "#/definitions/PaymentMethodCreateResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid or missing parameters",
+            "schema" : {
+              "$ref" : "#/definitions/BadRequestError"
+            }
+          },
+          "409" : {
+            "description" : "Could not create or update resource due to conflict",
+            "schema" : {
+              "$ref" : "#/definitions/ConflictRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Server error, please contact the administrator",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "PaymentMethodCreateResponse" : {
+      "type" : "object",
+      "properties" : {
+        "paymentMethod" : {
+          "$ref" : "#/definitions/PaymentMethod"
+        }
+      },
+      "example" : {
+        "paymentMethod" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "cardEnding" : "cardEnding",
+          "paymentProvider" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "paymentMethodId" : "3ac144ca-fa34-42ee-adf0-96e0c3a9fe81",
+          "cardholderName" : "cardholderName",
+          "cardType" : "cardType",
+          "nonce" : "nonce",
+          "userId" : "userId"
+        }
+      }
+    },
+    "PaymentTransaction" : {
+      "properties" : {
+        "paymentTransactionId" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "3ac144ca-fa34-42ee-adf0-96e0c3a9fe81"
+        },
+        "createdAt" : {
+          "type" : "string",
+          "format" : "date-time"
+        }
+      },
+      "example" : {
+        "createdAt" : "2000-01-23T04:56:07.000+00:00",
+        "paymentTransactionId" : "3ac144ca-fa34-42ee-adf0-96e0c3a9fe81"
+      }
+    },
+    "PaymentMethodUpdateRequest" : {
+      "type" : "object",
+      "properties" : {
+        "token" : {
+          "type" : "string"
+        }
+      },
+      "example" : {
+        "token" : "token"
+      }
+    },
+    "PaymentMethodRemovedResponse" : {
+      "type" : "object",
+      "properties" : {
+        "paymentMethod" : {
+          "$ref" : "#/definitions/PaymentMethod"
+        }
+      },
+      "example" : {
+        "paymentMethod" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "cardEnding" : "cardEnding",
+          "paymentProvider" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "paymentMethodId" : "3ac144ca-fa34-42ee-adf0-96e0c3a9fe81",
+          "cardholderName" : "cardholderName",
+          "cardType" : "cardType",
+          "nonce" : "nonce",
+          "userId" : "userId"
+        }
+      }
+    },
+    "PaymentMethod" : {
+      "type" : "object",
+      "properties" : {
+        "nonce" : {
+          "type" : "string"
+        },
+        "paymentMethodId" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "3ac144ca-fa34-42ee-adf0-96e0c3a9fe81"
+        },
+        "cardholderName" : {
+          "type" : "string"
+        },
+        "userId" : {
+          "type" : "string"
+        },
+        "cardType" : {
+          "type" : "string"
+        },
+        "paymentProvider" : {
+          "type" : "string",
+          "format" : "uuid"
+        },
+        "createdAt" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "cardEnding" : {
+          "type" : "string"
+        }
+      },
+      "example" : {
+        "createdAt" : "2000-01-23T04:56:07.000+00:00",
+        "cardEnding" : "cardEnding",
+        "paymentProvider" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+        "paymentMethodId" : "3ac144ca-fa34-42ee-adf0-96e0c3a9fe81",
+        "cardholderName" : "cardholderName",
+        "cardType" : "cardType",
+        "nonce" : "nonce",
+        "userId" : "userId"
+      }
+    },
+    "PaymentGateway" : {
+      "type" : "object",
+      "properties" : {
+        "paymentGatewayId" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "3ac144ca-fa34-42ee-adf0-96e0c3a9fe81"
+        },
+        "paymentProvider" : {
+          "type" : "string",
+          "example" : "braintree"
+        },
+        "supportedPaymentMethodTypes" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "example" : "card"
+          }
+        }
+      },
+      "example" : {
+        "paymentGatewayId" : "3ac144ca-fa34-42ee-adf0-96e0c3a9fe81",
+        "supportedPaymentMethodTypes" : [ "card", "card" ],
+        "paymentProvider" : "braintree"
+      }
+    },
+    "PaymentTransactionCreateResponse" : {
+      "properties" : {
+        "paymentTransaction" : {
+          "$ref" : "#/definitions/PaymentTransaction"
+        }
+      },
+      "example" : {
+        "paymentTransaction" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "paymentTransactionId" : "3ac144ca-fa34-42ee-adf0-96e0c3a9fe81"
+        }
+      }
+    },
+    "PaymentGatewayAuthorizationResponse" : {
+      "type" : "object",
+      "properties" : {
+        "token" : {
+          "type" : "string"
+        }
+      }
+    },
+    "PaymentMethodReAuthRequest" : {
+      "type" : "object",
+      "required" : [ "deviceId", "nonce", "platformId", "userId" ],
+      "properties" : {
+        "nonce" : {
+          "type" : "string"
+        },
+        "billingPostCode" : {
+          "type" : "string"
+        },
+        "billingLastName" : {
+          "type" : "string"
+        },
+        "platformId" : {
+          "type" : "string",
+          "format" : "uuid"
+        },
+        "userId" : {
+          "type" : "string"
+        },
+        "billingRegion" : {
+          "type" : "string"
+        },
+        "deviceId" : {
+          "type" : "string"
+        },
+        "billingStreetAddress" : {
+          "type" : "string"
+        },
+        "billingLocality" : {
+          "type" : "string"
+        },
+        "billingFirstName" : {
+          "type" : "string"
+        }
+      },
+      "example" : {
+        "billingStreetAddress" : "billingStreetAddress",
+        "billingRegion" : "billingRegion",
+        "billingLastName" : "billingLastName",
+        "billingLocality" : "billingLocality",
+        "billingFirstName" : "billingFirstName",
+        "platformId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+        "nonce" : "nonce",
+        "billingPostCode" : "billingPostCode",
+        "userId" : "userId",
+        "deviceId" : "deviceId"
+      }
+    },
+    "PaymentMethodUpdateResponse" : {
+      "type" : "object",
+      "properties" : {
+        "paymentMethod" : {
+          "$ref" : "#/definitions/PaymentMethod"
+        }
+      },
+      "example" : {
+        "paymentMethod" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "cardEnding" : "cardEnding",
+          "paymentProvider" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "paymentMethodId" : "3ac144ca-fa34-42ee-adf0-96e0c3a9fe81",
+          "cardholderName" : "cardholderName",
+          "cardType" : "cardType",
+          "nonce" : "nonce",
+          "userId" : "userId"
+        }
+      }
+    },
+    "PaymentTransactionFindManyResponse" : {
+      "properties" : {
+        "paymentTransactions" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/PaymentTransaction"
+          }
+        }
+      },
+      "example" : {
+        "paymentTransactions" : [ {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "paymentTransactionId" : "3ac144ca-fa34-42ee-adf0-96e0c3a9fe81"
+        }, {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "paymentTransactionId" : "3ac144ca-fa34-42ee-adf0-96e0c3a9fe81"
+        } ]
+      }
+    },
+    "UnauthorizedRequestError" : {
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "code" : {
+          "type" : "integer",
+          "format" : "int64",
+          "default" : 0
+        }
+      }
+    },
+    "NotFoundRequestError" : {
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "code" : {
+          "type" : "integer",
+          "format" : "int64",
+          "default" : 0
+        }
+      }
+    },
+    "PaymentMethodCreateRequest" : {
+      "type" : "object",
+      "required" : [ "nonce", "paymentProvider", "platformId", "userId" ],
+      "properties" : {
+        "nonce" : {
+          "type" : "string"
+        },
+        "billingPostCode" : {
+          "type" : "string"
+        },
+        "billingLastName" : {
+          "type" : "string"
+        },
+        "platformId" : {
+          "type" : "string",
+          "format" : "uuid"
+        },
+        "userId" : {
+          "type" : "string"
+        },
+        "billingRegion" : {
+          "type" : "string"
+        },
+        "paymentProvider" : {
+          "type" : "string",
+          "example" : "braintree"
+        },
+        "billingStreetAddress" : {
+          "type" : "string"
+        },
+        "billingLocality" : {
+          "type" : "string"
+        },
+        "billingFirstName" : {
+          "type" : "string"
+        }
+      },
+      "example" : {
+        "billingStreetAddress" : "billingStreetAddress",
+        "billingRegion" : "billingRegion",
+        "billingLastName" : "billingLastName",
+        "paymentProvider" : "braintree",
+        "billingLocality" : "billingLocality",
+        "billingFirstName" : "billingFirstName",
+        "platformId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+        "nonce" : "nonce",
+        "billingPostCode" : "billingPostCode",
+        "userId" : "userId"
+      }
+    },
+    "PaymentMethodFindOneResponse" : {
+      "type" : "object",
+      "properties" : {
+        "paymentMethod" : {
+          "$ref" : "#/definitions/PaymentMethod"
+        }
+      },
+      "example" : {
+        "paymentMethod" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "cardEnding" : "cardEnding",
+          "paymentProvider" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "paymentMethodId" : "3ac144ca-fa34-42ee-adf0-96e0c3a9fe81",
+          "cardholderName" : "cardholderName",
+          "cardType" : "cardType",
+          "nonce" : "nonce",
+          "userId" : "userId"
+        }
+      }
+    },
+    "PaymentMethodFindManyResponse" : {
+      "type" : "object",
+      "properties" : {
+        "paymentMethods" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/PaymentMethod"
+          }
+        }
+      },
+      "example" : {
+        "paymentMethods" : [ {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "cardEnding" : "cardEnding",
+          "paymentProvider" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "paymentMethodId" : "3ac144ca-fa34-42ee-adf0-96e0c3a9fe81",
+          "cardholderName" : "cardholderName",
+          "cardType" : "cardType",
+          "nonce" : "nonce",
+          "userId" : "userId"
+        }, {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "cardEnding" : "cardEnding",
+          "paymentProvider" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "paymentMethodId" : "3ac144ca-fa34-42ee-adf0-96e0c3a9fe81",
+          "cardholderName" : "cardholderName",
+          "cardType" : "cardType",
+          "nonce" : "nonce",
+          "userId" : "userId"
+        } ]
+      }
+    },
+    "InternalServerError" : {
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "example" : "Internal Server Error"
+        },
+        "code" : {
+          "type" : "integer",
+          "format" : "int32",
+          "default" : 0
+        }
+      }
+    },
+    "ProcessingError" : {
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "example" : "Internal Server Error"
+        },
+        "code" : {
+          "type" : "integer",
+          "format" : "int32",
+          "default" : 0
+        }
+      }
+    },
+    "PaymentTransactionCreateRequest" : {
+      "required" : [ "amount", "paymentMethodId", "userCountryId", "userId" ],
+      "properties" : {
+        "currency" : {
+          "type" : "string"
+        },
+        "amount" : {
+          "type" : "number",
+          "format" : "numeric"
+        },
+        "userId" : {
+          "type" : "string",
+          "format" : "uuid"
+        },
+        "paymentMethodId" : {
+          "type" : "string",
+          "format" : "uuid"
+        }
+      },
+      "example" : {
+        "currency" : "GBP",
+        "amount" : 1234,
+        "paymentMethodId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+        "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      }
+    },
+    "ConflictRequestError" : {
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "code" : {
+          "type" : "integer",
+          "format" : "int32",
+          "default" : 0
+        }
+      }
+    },
+    "PaymentTransactionRefundResponse" : {
+      "properties" : {
+        "paymentTransaction" : {
+          "$ref" : "#/definitions/PaymentTransaction"
+        }
+      },
+      "example" : {
+        "paymentTransaction" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "paymentTransactionId" : "3ac144ca-fa34-42ee-adf0-96e0c3a9fe81"
+        }
+      }
+    },
+    "PaymentyRequiredError" : {
+      "type" : "object",
+      "properties" : {
+        "creditBalance" : {
+          "type" : "integer"
+        },
+        "requiredCredit" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "PaymentGatewayFindOneResponse" : {
+      "type" : "object",
+      "properties" : {
+        "paymentGateway" : {
+          "$ref" : "#/definitions/PaymentGateway"
+        }
+      }
+    },
+    "BadRequestError" : {
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "code" : {
+          "type" : "integer",
+          "format" : "int64",
+          "default" : 0
+        }
+      }
+    },
+    "PaymentMethodReAuthResponse" : {
+      "properties" : {
+        "paymentMethod" : {
+          "$ref" : "#/definitions/PaymentMethod"
+        }
+      },
+      "example" : {
+        "paymentMethod" : {
+          "createdAt" : "2000-01-23T04:56:07.000+00:00",
+          "cardEnding" : "cardEnding",
+          "paymentProvider" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "paymentMethodId" : "3ac144ca-fa34-42ee-adf0-96e0c3a9fe81",
+          "cardholderName" : "cardholderName",
+          "cardType" : "cardType",
+          "nonce" : "nonce",
+          "userId" : "userId"
+        }
+      }
+    },
+    "PaymentTransactionMigrateRequest" : {
+      "required" : [ "paymentMethod", "paymentTransaction" ],
+      "properties" : {
+        "paymentTransaction" : {
+          "$ref" : "#/definitions/PaymentTransaction"
+        },
+        "paymentMethod" : {
+          "$ref" : "#/definitions/PaymentMethod"
+        }
+      }
+    },
+    "ForbiddenRequestError" : {
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "code" : {
+          "type" : "integer",
+          "format" : "int64",
+          "default" : 0
+        }
+      }
+    },
+    "PaymentTransactionGetResponse" : {
+      "properties" : {
+        "amount" : {
+          "type" : "number",
+          "format" : "int64"
+        },
+        "userId" : {
+          "type" : "string",
+          "format" : "uuid"
+        },
+        "currency" : {
+          "type" : "string",
+        },
+        "paymentMethodId" : {
+          "type" : "string",
+          "format" : "uuid"
+        }
+      },
+      "example" : {
+        "currency" : "GBP",
+        "amount" : 1234,
+        "paymentMethodId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+        "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      }
+    },
+    "PaymentGatewayFindManyResponse" : {
+      "type" : "object",
+      "properties" : {
+        "paymentGateways" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/PaymentGateway"
+          }
+        }
+      },
+      "example" : {
+        "paymentGateways" : [ {
+          "paymentGatewayId" : "3ac144ca-fa34-42ee-adf0-96e0c3a9fe81",
+          "supportedPaymentMethodTypes" : [ "ApplePay", "GooglePay" ],
+          "paymentProvider" : "braintree"
+        }, {
+          "paymentGatewayId" : "3ac144ca-fa34-42ee-adf0-96e0c3a9fe81",
+          "supportedPaymentMethodTypes" : [ "Card", "Paypal" ],
+          "paymentProvider" : "Stripe"
+        } ]
+      }
+    }
+  },
+  "parameters" : {
+    "RequestToken" : {
+      "name" : "Request-Token",
+      "in" : "header",
+      "description" : "Identifier for request. Clients can send requests multiple times with the same request token to deal with network issues.",
+      "required" : true,
+      "type" : "string",
+      "format" : "uuid"
+    },
+    "Requester" : {
+      "name" : "Requester",
+      "in" : "header",
+      "description" : "Requester type. If value is data, changes will not be sent to the data layer notification system",
+      "required" : true,
+      "type" : "string",
+      "enum" : [ "consumer", "admin", "worker", "service", "data" ]
+    }
+  },
+  "responses" : {
+    "BadRequestError" : {
+      "description" : "Invalid or missing parameters",
+      "schema" : {
+        "$ref" : "#/definitions/BadRequestError"
+      }
+    },
+    "ConflictRequestError" : {
+      "description" : "Could not create or update resource due to conflict",
+      "schema" : {
+        "$ref" : "#/definitions/ConflictRequestError"
+      }
+    },
+    "InternalServerError" : {
+      "description" : "Server error, please contact the administrator",
+      "schema" : {
+        "$ref" : "#/definitions/InternalServerError"
+      }
+    },
+    "NotFoundRequestError" : {
+      "description" : "Resource not found",
+      "schema" : {
+        "$ref" : "#/definitions/NotFoundRequestError"
+      }
+    },
+    "ProcessingError" : {
+      "description" : "Service is already processing the request, try again in a short time",
+      "schema" : {
+        "$ref" : "#/definitions/ProcessingError"
+      }
+    }
+  }
+}
