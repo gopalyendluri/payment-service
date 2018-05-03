@@ -68,6 +68,12 @@ class PaymentMethod extends REST_Controller {
             );
             $serviceProviderResponse = $process->execute();
             $response = $serviceProviderResponse->getResponse();
+
+            //@todo: validate resonse and process and format for the saving in database
+            $this->load->model('paymentMethods_model');
+
+            $paymentMethod = $this->paymentMethods_model->insert_entry($response);
+
             $this->set_response($response, REST_Controller::HTTP_CREATED);
         }
         catch (\Exception $e){
@@ -100,6 +106,13 @@ class PaymentMethod extends REST_Controller {
             );
             $serviceProviderResponse = $process->execute();
             $response = $serviceProviderResponse->getResponse();
+
+            //@todo: validate resonse and process and format for the saving in database
+         //   $this->load->model('paymentMethods_model');
+
+          //  $paymentMethod = $this->paymentMethods_model->update_entry($response);
+
+
             $this->set_response($response, REST_Controller::HTTP_OK);
         }
         catch (\Exception $e){

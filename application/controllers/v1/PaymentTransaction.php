@@ -67,6 +67,14 @@ class PaymentTransaction extends REST_Controller {
             );
             $serviceProviderResponse = $process->execute();
             $response = $serviceProviderResponse->getResponse();
+
+
+            // Process response and save the information in investments model here
+            //@todo: validate resonse and process and format for the saving in database
+            $this->load->model('investments_model');
+
+            $investment = $this->investments_model->insert_entry($response);
+
             $this->set_response($response, REST_Controller::HTTP_CREATED);
         }
         catch (\Exception $e){
