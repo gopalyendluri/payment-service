@@ -7,9 +7,11 @@ require APPPATH . '/libraries/REST_Controller.php';
 
 // use namespace
 use Restserver\Libraries\REST_Controller;
+use PaymentService\ServiceProvider\Processor\ServiceProviderProcess;
+use PaymentService\ServiceProvider\Provider\ServiceProvider;
+use PaymentService\ServiceProvider\RequestType\RequestType;
 
-
-class PaymentMethod extends REST_Controller {
+class PaymentTransaction extends REST_Controller {
 
     function __construct()
     {
@@ -20,46 +22,89 @@ class PaymentMethod extends REST_Controller {
 
     function find_get()
     {
-        $paymentTransactionId = urldecode($this->get('id'));
-        //@todo:replace hardcoded JSON String with Database Values
-        $paymentTransaction = '{
-    "paymentTransaction": {
-        "createdAt": 1525300353,
-        "paymentTransactionId": "0669d5e0-f590-48e8-8e67-31797d45bb12",
-        "amount": 1090,
-        "currency": "GBP",
-        "status": "Success"
-    }
-}';
 
-        $paymentTransaction = json_decode($paymentTransaction);
-        $this->set_response($paymentTransaction, REST_Controller::HTTP_OK); // CREATED (201) being the HTTP response code
+        $paymentTransactionId = urldecode($this->get('id'));
+        $paymentProvider = urldecode($this->get('paymentProvider'));
+
+        try{
+            //@todo: validate input params
+            $requestParams = array('paymentTransactionId'=>$paymentTransactionId);
+
+            // Call action.
+            $process = new ServiceProviderProcess(
+                new ServiceProvider(strtolower($paymentProvider)),
+                new RequestType(RequestType::TRANSACTION_LIST),
+                $requestParams
+            );
+            $serviceProviderResponse = $process->execute();
+            $response = $serviceProviderResponse->getResponse();
+            $this->set_response($response, REST_Controller::HTTP_OK);
+        }
+        catch (\Exception $e){
+            //@todo: handle excetion to build proper error codes
+            $response = array(
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+            );
+            $this->set_response($response, REST_Controller::HTTP_NOT_FOUND);
+        }
+
     }
 
 
     function create_post()
     {
-        $paymentMethodRequest =  $this->post();
-        $this->set_response($paymentMethodRequest, REST_Controller::HTTP_CREATED);
+        $paymentTransactionRequest =  $this->post();
+        try{
+            //@todo: validate input params
+            $paymentProvider = urldecode($paymentTransactionRequest['paymentProvider']);
+
+            // Call action.
+            $process = new ServiceProviderProcess(
+                new ServiceProvider(strtolower($paymentProvider)),
+                new RequestType(RequestType::TRANSACTION_CREATE),
+                $paymentTransactionRequest
+            );
+            $serviceProviderResponse = $process->execute();
+            $response = $serviceProviderResponse->getResponse();
+            $this->set_response($response, REST_Controller::HTTP_CREATED);
+        }
+        catch (\Exception $e){
+            //@todo: handle excetion to build proper error codes
+            $response = array(
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+            );
+            $this->set_response($response, REST_Controller::HTTP_NOT_FOUND);
+        }
     }
 
-
-    function update_put()
-    {
-        $paymentMethodRequest =  $this->post();
-        $this->set_response($paymentMethodRequest, REST_Controller::HTTP_OK);
-    }
-
-    function remove_delete()
-    {
-        $paymentMethodRequest =  $this->post();
-        $this->set_response($paymentMethodRequest, REST_Controller::HTTP_ACCEPTED);
-    }
 
     function refund_post()
     {
-        $paymentMethodRequest =  $this->post();
-        $this->set_response($paymentMethodRequest, REST_Controller::HTTP_OK);
+        $paymentTransactionRequest =  $this->post();
+        try{
+            //@todo: validate input params
+            $paymentProvider = urldecode($paymentTransactionRequest['paymentProvider']);
+
+            // Call action.
+            $process = new ServiceProviderProcess(
+                new ServiceProvider(strtolower($paymentProvider)),
+                new RequestType(RequestType::TRANSACTION_REFUND),
+                $paymentTransactionRequest
+            );
+            $serviceProviderResponse = $process->execute();
+            $response = $serviceProviderResponse->getResponse();
+            $this->set_response($response, REST_Controller::HTTP_OK);
+        }
+        catch (\Exception $e){
+            //@todo: handle excetion to build proper error codes
+            $response = array(
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+            );
+            $this->set_response($response, REST_Controller::HTTP_NOT_FOUND);
+        }
     }
 
 }

@@ -3,8 +3,8 @@
 /**
  * Created by PhpStorm.
  * User: gopal
- * Date: 01/02/2017
- * Time: 11:10
+ * Date: 02/05/2018
+ * Time: 21:10
  */
 class PaymentGateway_model extends CI_Model
 {

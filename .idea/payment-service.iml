@@ -18,14 +18,10 @@
     <orderEntry type="module-library">
       <library name="PHARS">
         <CLASSES>
-          <root url="phar://$MODULE_DIR$/application/libraries/Util/geoip_lite_2/geoip2.phar/" />
           <root url="phar://$MODULE_DIR$/composer.phar/" />
-          <root url="phar://$MODULE_DIR$/application/libraries/Util/aws/aws.phar/" />
         </CLASSES>
         <SOURCES>
-          <root url="phar://$MODULE_DIR$/application/libraries/Util/geoip_lite_2/geoip2.phar/" />
           <root url="phar://$MODULE_DIR$/composer.phar/" />
-          <root url="phar://$MODULE_DIR$/application/libraries/Util/aws/aws.phar/" />
         </SOURCES>
       </library>
     </orderEntry>
